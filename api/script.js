@@ -1,12 +1,5 @@
-// api.js
-const express = require('express');
-const app = express();
-app.use(express.json());
-
-app.post('/enviar', (req, res) => {
-  const codigo = req.body.codigo || '';
-
-  const scriptFinal = `// codigo aqui\n${codigo}\n// codigo aqui\n\nlocal redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
+const codigoLua = `  
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
 local Window = redzlib:MakeWindow({
   Title = "Tropa do Egito : PathHack 🛰️",
   SubTitle = "by DKZIN 🥷🏼🇪🇬",
@@ -271,10 +264,14 @@ PathTab:AddToggle({
 			end
 		end
 	end
-})`;
+})
+`
 
-  res.json({ script: scriptFinal, message: 'Código recebido com sucesso' });
-});
-
-const porta = 3000;
-app.listen(porta, () => console.log(`API rodando na porta ${porta}`));
+fetch('https://suaapi.com/enviar', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ script: codigoLua })
+})
+.then(res => res.json())
+.then(data => console.log(data))
+.catch(err => console.error(err))
